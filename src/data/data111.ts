@@ -1,42 +1,6 @@
-import React, {useMemo, useState} from 'react';
-import {useTable} from "react-table";
-import './table.css'
-import style from './table.module.css'
-
-type DataType = {
-    id : number
-    name : string
-    username : string
-    email : string
-    address : {
-        street : string
-        suite : string
-        city : string
-        zipcode : string
-        geo : {
-            lat : string
-            lng : string
-        }
-    }
-    phone : string
-    website : string
-    company : {
-        name : string
-        catchPhrase : string
-        bs : string
-    }
-}
-
-type TableType2 = {
-    Header : string
-    accessor : string
-}
-
-type AllType = DataType | TableType2
-
-let dataAxios = [
+export const data222 = [
     {
-        "id": 1,
+        "id": 101,
         "name": "Leanne Graham",
         "username": "Bret",
         "email": "Sincere@april.biz",
@@ -59,7 +23,7 @@ let dataAxios = [
         }
     },
     {
-        "id": 2,
+        "id": 202,
         "name": "Ervin Howell",
         "username": "Antonette",
         "email": "Shanna@melissa.tv",
@@ -82,7 +46,7 @@ let dataAxios = [
         }
     },
     {
-        "id": 3,
+        "id": 303,
         "name": "Clementine Bauch",
         "username": "Samantha",
         "email": "Nathan@yesenia.net",
@@ -105,7 +69,7 @@ let dataAxios = [
         }
     },
     {
-        "id": 4,
+        "id": 404,
         "name": "Patricia Lebsack",
         "username": "Karianne",
         "email": "Julianne.OConner@kory.org",
@@ -128,7 +92,7 @@ let dataAxios = [
         }
     },
     {
-        "id": 5,
+        "id": 505,
         "name": "Chelsey Dietrich",
         "username": "Kamren",
         "email": "Lucio_Hettinger@annie.ca",
@@ -151,7 +115,7 @@ let dataAxios = [
         }
     },
     {
-        "id": 6,
+        "id": 606,
         "name": "Mrs. Dennis Schulist",
         "username": "Leopoldo_Corkery",
         "email": "Karley_Dach@jasper.info",
@@ -174,7 +138,7 @@ let dataAxios = [
         }
     },
     {
-        "id": 7,
+        "id": 707,
         "name": "Kurtis Weissnat",
         "username": "Elwyn.Skiles",
         "email": "Telly.Hoeger@billy.biz",
@@ -197,7 +161,7 @@ let dataAxios = [
         }
     },
     {
-        "id": 8,
+        "id": 808,
         "name": "Nicholas Runolfsdottir V",
         "username": "Maxime_Nienow",
         "email": "Sherwood@rosamond.me",
@@ -220,7 +184,7 @@ let dataAxios = [
         }
     },
     {
-        "id": 9,
+        "id": 909,
         "name": "Glenna Reichert",
         "username": "Delphine",
         "email": "Chaim_McDermott@dana.io",
@@ -243,7 +207,7 @@ let dataAxios = [
         }
     },
     {
-        "id": 10,
+        "id": 1010,
         "name": "Clementina DuBuque",
         "username": "Moriah.Stanton",
         "email": "Rey.Padberg@karina.biz",
@@ -266,129 +230,3 @@ let dataAxios = [
         }
     }
 ]
-
-function App() {
-
-    const [data1, setArrData] = useState<DataType[]>(dataAxios)
-
-    let data = useMemo<DataType[]>(() => data1,[data1])
-
-    const columns = React.useMemo<TableType2[]>(
-        () => [
-            {
-                Header: 'ID',
-                accessor: 'id', // accessor is the "key" in the data
-            },
-            {
-                Header: 'username',
-                accessor: 'username',
-
-            },
-            {
-                Header: 'email',
-                accessor: 'email',
-            },
-            {
-                Header: 'website',
-                accessor: 'website',
-            },
-
-        ],
-        []
-    )
-
-    const tableInstance = useTable<AllType>({ columns, data }, hooks => {
-        hooks.visibleColumns.push(columns => [
-            {
-                id: "checkbox",
-                Header : "",
-                Cell: () => (
-                    <input type={"checkbox"}/>
-                ),
-            },
-            columns[0],
-            {
-                id: "about",
-                Header : "",
-                Cell: ({row}) => (
-                    <a href={`http://localhost:3000/users/${row.values.id}`} target={"_blank"}>Подробнее</a>
-                ),
-            },
-            columns[1],
-            columns[2],
-            columns[3],
-            {
-                id: "Edit",
-                Header : "",
-                Cell: ({row}) => (
-                    <button onClick={() => {
-                        dataAxios = [...dataAxios].filter(t => t.id !== row.values.id)
-                        setArrData(dataAxios)
-                    }}
-                            disabled={dataAxios.length <= 1}
-                    >X</button>
-                ),
-            },
-        ])
-    })
-
-
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        state : {}
-    } = tableInstance
-
-
-
-  return (
-    <div className="App">
-        <table {...getTableProps()} className={style.table}>
-            <thead>
-            {// Loop over the header rows
-                headerGroups.map(headerGroup => (
-                    // Apply the header row props
-                    <tr {...headerGroup.getHeaderGroupProps()}>
-                        {// Loop over the headers in each row
-                            headerGroup.headers.map(column => (
-                                // Apply the header cell props
-                                <th {...column.getHeaderProps()}>
-                                    {// Render the header
-                                        column.render('Header')}
-                                </th>
-                            ))}
-                    </tr>
-                ))}
-            </thead>
-            {/* Apply the table body props */}
-            <tbody {...getTableBodyProps()}>
-            {// Loop over the table rows
-                rows.map(row => {
-                    // Prepare the row for display
-                    prepareRow(row)
-                    return (
-                        // Apply the row props
-                        <tr {...row.getRowProps()}>
-                            {// Loop over the rows cells
-                                row.cells.map(cell => {
-                                    // Apply the cell props
-                                    return (
-                                        <td {...cell.getCellProps()}>
-                                            {// Render the cell contents
-                                                cell.render('Cell')}
-                                        </td>
-                                    )
-                                })}
-                        </tr>
-                    )
-                })}
-            </tbody>
-        </table>
-    </div>
-  );
-}
-
-export default App;
