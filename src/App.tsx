@@ -269,6 +269,8 @@ let dataJson = [
 
 function App() {
 
+    const [showButton, setShowButton] = useState<boolean>(false)
+
     const [dataState, setDataState] = useState<DataType[]>(dataJson)
 
     let data = useMemo<DataType[]>(() => dataState,[dataState])
@@ -351,16 +353,19 @@ function App() {
                             headerGroup.headers.map(column => (
                                 // Apply the header cell props
                                 <th {...column.getHeaderProps()}>
-                                    {column.Header === 'username' && <button className={style.button} onClick={() => {
-                                        dataJson = [...dataJson].sort((a, b) => a.username > b.username ? -1 : 1)
-                                        setDataState(dataJson)
-                                    }}>▼</button>}
+
                                     {// Render the header
                                         column.render('Header')}
+                                    {column.Header === 'username' && showButton && <button className={style.button} onClick={() => {
+                                        dataJson = [...dataJson].sort((a, b) => a.username > b.username ? -1 : 1)
+                                        setDataState(dataJson)
+                                        setShowButton(false)
+                                    }}>▼</button>}
 
-                                    {column.Header === 'username' && <button className={style.button} onClick={() => {
+                                    {column.Header === 'username' && !showButton && <button className={style.button} onClick={() => {
                                         dataJson = [...dataJson].sort((a, b) => a.username > b.username ? 1 : -1)
                                         setDataState(dataJson)
+                                        setShowButton(true)
                                     }}>▲</button>}
                                 </th>
                             ))}
