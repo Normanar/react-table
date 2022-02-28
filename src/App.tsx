@@ -2,6 +2,7 @@ import React, {useMemo, useState} from 'react';
 import {useTable} from "react-table";
 import './table.css'
 import style from './table.module.css'
+import {NavLink} from "react-router-dom";
 
 type DataType = {
     id : number
@@ -269,6 +270,8 @@ let dataAxios = [
 
 function App() {
 
+    const [input, setInput] = useState<string>('')
+
     const [data1, setArrData] = useState<DataType[]>(dataAxios)
 
     let data = useMemo<DataType[]>(() => data1,[data1])
@@ -297,7 +300,14 @@ function App() {
         []
     )
 
-    const tableInstance = useTable<AllType>({ columns, data }, hooks => {
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        rows,
+        prepareRow,
+
+    } = useTable<AllType>({ columns, data }, hooks => {
         hooks.visibleColumns.push(columns => [
             {
                 id: "checkbox",
@@ -311,7 +321,7 @@ function App() {
                 id: "about",
                 Header : "",
                 Cell: ({row}) => (
-                    <a href={`http://localhost:3000/users/${row.values.id}`} target={"_blank"}>Подробнее</a>
+                    <NavLink to={`users/${row.values.id}`} className={style.link}>Подробнее</NavLink>
                 ),
             },
             columns[1],
@@ -329,19 +339,8 @@ function App() {
                     >X</button>
                 ),
             },
-        ])
+        ]);
     })
-
-
-    const {
-        getTableProps,
-        getTableBodyProps,
-        headerGroups,
-        rows,
-        prepareRow,
-        state : {}
-    } = tableInstance
-
 
 
   return (
@@ -356,8 +355,17 @@ function App() {
                             headerGroup.headers.map(column => (
                                 // Apply the header cell props
                                 <th {...column.getHeaderProps()}>
+                                    {column.Header === 'username' && <button className={style.button} onClick={() => {
+                                        dataAxios = [...dataAxios].sort((a, b) => a.username > b.username ? -1 : 1)
+                                        setArrData(dataAxios)
+                                    }}>▼</button>}
                                     {// Render the header
                                         column.render('Header')}
+
+                                    {column.Header === 'username' && <button className={style.button} onClick={() => {
+                                        dataAxios = [...dataAxios].sort((a, b) => a.username > b.username ? 1 : -1)
+                                        setArrData(dataAxios)
+                                    }}>▲</button>}
                                 </th>
                             ))}
                     </tr>
