@@ -28,14 +28,14 @@ type DataType = {
     }
 }
 
-type TableType2 = {
+type TableType = {
     Header : string
     accessor : string
 }
 
-type AllType = DataType | TableType2
+type AllType = DataType | TableType
 
-let dataAxios = [
+let dataJson = [
     {
         "id": 1,
         "name": "Leanne Graham",
@@ -270,17 +270,15 @@ let dataAxios = [
 
 function App() {
 
-    const [input, setInput] = useState<string>('')
+    const [dataState, setDataState] = useState<DataType[]>(dataJson)
 
-    const [data1, setArrData] = useState<DataType[]>(dataAxios)
+    let data = useMemo<DataType[]>(() => dataState,[dataState])
 
-    let data = useMemo<DataType[]>(() => data1,[data1])
-
-    const columns = React.useMemo<TableType2[]>(
+    const columns = useMemo<TableType[]>(
         () => [
             {
                 Header: 'ID',
-                accessor: 'id', // accessor is the "key" in the data
+                accessor: 'id',
             },
             {
                 Header: 'username',
@@ -305,8 +303,7 @@ function App() {
         getTableBodyProps,
         headerGroups,
         rows,
-        prepareRow,
-
+        prepareRow
     } = useTable<AllType>({ columns, data }, hooks => {
         hooks.visibleColumns.push(columns => [
             {
@@ -332,10 +329,10 @@ function App() {
                 Header : "",
                 Cell: ({row}) => (
                     <button onClick={() => {
-                        dataAxios = [...dataAxios].filter(t => t.id !== row.values.id)
-                        setArrData(dataAxios)
+                        dataJson = [...dataJson].filter(t => t.id !== row.values.id)
+                        setDataState(dataJson)
                     }}
-                            disabled={dataAxios.length <= 1}
+                            disabled={dataJson.length <= 1}
                     >X</button>
                 ),
             },
@@ -356,15 +353,15 @@ function App() {
                                 // Apply the header cell props
                                 <th {...column.getHeaderProps()}>
                                     {column.Header === 'username' && <button className={style.button} onClick={() => {
-                                        dataAxios = [...dataAxios].sort((a, b) => a.username > b.username ? -1 : 1)
-                                        setArrData(dataAxios)
+                                        dataJson = [...dataJson].sort((a, b) => a.username > b.username ? -1 : 1)
+                                        setDataState(dataJson)
                                     }}>▼</button>}
                                     {// Render the header
                                         column.render('Header')}
 
                                     {column.Header === 'username' && <button className={style.button} onClick={() => {
-                                        dataAxios = [...dataAxios].sort((a, b) => a.username > b.username ? 1 : -1)
-                                        setArrData(dataAxios)
+                                        dataJson = [...dataJson].sort((a, b) => a.username > b.username ? 1 : -1)
+                                        setDataState(dataJson)
                                     }}>▲</button>}
                                 </th>
                             ))}
