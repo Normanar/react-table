@@ -1,6 +1,5 @@
 import React, {useMemo, useState} from 'react';
 import {useTable} from "react-table";
-import './table.css'
 import style from './table.module.css'
 import {NavLink} from "react-router-dom";
 
